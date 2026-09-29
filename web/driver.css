@@ -1,0 +1,18 @@
+.driver-page { align-items: center; display: flex; justify-content: center; min-height: 100dvh; overflow: auto; padding: 20px; }
+.driver-card { background: #141618; border: 1px solid #2a2d30; border-radius: 10px; box-shadow: 0 20px 70px #0008; max-width: 460px; padding: 25px; width: 100%; }
+.driver-brand { color: #eceef1; display: block; font-size: 16px; font-weight: 750; letter-spacing: .1em; margin-bottom: 36px; text-decoration: none; }
+.driver-brand span { color: #858a91; font-size: 9px; }
+.driver-card h1 { display: block; font-size: 21px; margin: 8px 0; }
+.driver-intro, .driver-note { color: #90959b; font-size: 12px; line-height: 1.6; }
+.driver-card label { color: #c7cacf; display: block; font-size: 11px; margin: 23px 0 7px; }
+.driver-card input { background: #101214; border: 1px solid #33373b; border-radius: 5px; color: #e5e7e9; font-size: 12px; min-height: 42px; padding: 0 11px; width: 100%; }
+.driver-buttons { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
+.driver-buttons .button { min-height: 39px; }
+.driver-buttons .button:disabled { cursor: not-allowed; opacity: .5; }
+.driver-status { background: #1a1d20; border: 1px solid #2a2e32; border-radius: 5px; color: #c6c9cd; font-size: 11px; line-height: 1.5; margin: 19px 0 0; padding: 11px; }
+.driver-status.error { border-color: #744140; color: #f0aaa3; }
+.driver-fix { background: #101214; border: 1px solid #2a2e32; border-radius: 5px; display: grid; gap: 7px; margin-top: 11px; padding: 12px; }
+.driver-fix strong { color: #e9ebed; font: 12px ui-monospace, Consolas, monospace; }
+.driver-fix span:not(.section-kicker), .driver-fix time { color: #93989e; font-size: 10px; }
+.driver-clear { background: transparent; border: 0; color: #b3b6bb; font-size: 10px; margin-top: 16px; padding: 5px 0; text-decoration: underline; }
+.driver-note { border-top: 1px solid #282b2e; font-size: 10px; margin: 14px 0 0; padding-top: 12px; }

@@ -1,0 +1,51 @@
+.customer-page { align-items: flex-start; display: flex; justify-content: center; min-height: 100dvh; overflow: auto; padding: 34px 18px; }
+.customer-shell { background: #121416; border: 1px solid #292d30; border-radius: 10px; box-shadow: 0 20px 70px #0007; max-width: 860px; padding: 25px; width: 100%; }
+.customer-brand { margin-bottom: 30px; }
+.customer-heading { align-items: center; border-bottom: 1px solid #292d30; display: flex; gap: 16px; justify-content: space-between; padding-bottom: 21px; }
+.customer-heading h1 { color: #f0f1f2; font-size: 22px; margin: 8px 0 5px; }
+.customer-heading p { color: #898f96; font-size: 11px; margin: 0; }
+.customer-heading .status-pill { flex: 0 0 auto; font-size: 10px; padding: 6px 10px; }
+.customer-route { padding-top: 23px; }
+.customer-stops { display: grid; gap: 16px; grid-template-columns: 1fr 40px 1fr; }
+.customer-stop { align-items: center; background: #181b1e; border: 1px solid #2b2f33; border-radius: 6px; display: flex; gap: 11px; min-width: 0; padding: 14px; }
+.customer-stop > div { min-width: 0; }
+.customer-stop strong { color: #e5e7e9; display: block; font-size: 12px; font-weight: 550; line-height: 1.5; margin-top: 5px; overflow-wrap: anywhere; }
+.customer-stop-marker { border: 2px solid #dca642; border-radius: 50%; flex: 0 0 auto; height: 11px; width: 11px; }
+.dropoff-marker { border-color: #75b6df; }
+.customer-route-line { align-self: center; border-top: 1px solid #5c6268; }
+.customer-map-section, .customer-timeline-section { margin-top: 25px; }
+.customer-section-heading { align-items: end; display: flex; gap: 12px; justify-content: space-between; margin-bottom: 11px; }
+.customer-section-heading h2 { color: #e6e8ea; font-size: 13px; margin: 5px 0 0; }
+.customer-section-heading > span { color: #8d9399; font-size: 9px; text-align: right; }
+.customer-map { background: #22272b; border: 1px solid #34393e; border-radius: 6px; height: 300px; overflow: hidden; position: relative; }
+.customer-map-tiles, .customer-map-overlay { inset: 0; position: absolute; }
+.customer-map-tiles { overflow: hidden; }
+.customer-map-tiles img { height: 256px; position: absolute; width: 256px; }
+.customer-map-overlay { height: 100%; pointer-events: none; width: 100%; }
+.customer-map-overlay line { stroke: #e0a43a; stroke-dasharray: 8 5; stroke-linecap: round; stroke-width: 3; }
+.customer-map-overlay circle { stroke: #111416; stroke-width: 3; }
+.customer-map-overlay .map-pickup { fill: #dfa840; }
+.customer-map-overlay .map-dropoff { fill: #77bce9; }
+.customer-map-overlay .map-live { fill: #57c28b; }
+.customer-map-empty { color: #c3c7cb; font-size: 11px; left: 50%; margin: 0; position: absolute; text-align: center; top: 50%; transform: translate(-50%, -50%); width: calc(100% - 30px); }
+.map-attribution { background: #111416d9; border-radius: 3px; bottom: 6px; color: #b7bcc0; font-size: 8px; padding: 4px 6px; position: absolute; right: 6px; }
+.map-attribution a { color: #d3d7db; }
+.customer-map-note { color: #858b92; font-size: 9px; line-height: 1.6; margin: 8px 0 0; }
+.customer-timeline { display: grid; gap: 0; list-style: none; margin: 0; padding: 0 0 0 7px; }
+.customer-timeline li { border-left: 1px solid #41464b; display: grid; gap: 4px; min-height: 50px; padding: 0 0 13px 18px; position: relative; }
+.customer-timeline li:last-child { border-color: transparent; }
+.customer-timeline li::before { background: #686e74; border: 2px solid #121416; border-radius: 50%; content: ""; height: 9px; left: -6px; position: absolute; top: 1px; width: 9px; }
+.customer-timeline li.current::before { background: #dfa840; }
+.customer-timeline strong { color: #dfe1e3; font-size: 10px; font-weight: 600; }
+.customer-timeline time { color: #858b92; font-size: 9px; }
+.customer-error { background: #281b1b; border: 1px solid #593333; border-radius: 5px; color: #edb1a9; font-size: 11px; line-height: 1.6; margin: 18px 0 0; padding: 13px; }
+.customer-footer { border-top: 1px solid #292d30; color: #777d83; font-size: 9px; line-height: 1.5; margin-top: 25px; padding-top: 13px; }
+@media (max-width: 580px) {
+  .customer-page { padding: 12px; }
+  .customer-shell { padding: 18px 14px; }
+  .customer-heading h1 { font-size: 19px; }
+  .customer-stops { gap: 7px; grid-template-columns: 1fr 14px 1fr; }
+  .customer-stop { gap: 8px; padding: 10px 8px; }
+  .customer-stop strong { font-size: 10px; }
+  .customer-map { height: 240px; }
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0c0d0f">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>VSD Logistics — Shipment tracking</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/customer.css">
+    <script src="/customer.js" defer></script>
+  </head>
+  <body class="customer-page">
+    <main class="customer-shell">
+      <a class="driver-brand customer-brand" href="/" aria-label="VSD Logistics home">VSD <span>LOGISTICS</span></a>
+      <header class="customer-heading">
+        <div><span class="section-kicker">CUSTOMER TRACKING</span><h1>Your shipment</h1><p id="tracking-reference">Loading secure shipment details…</p></div>
+        <span class="status-pill" id="tracking-status">Loading</span>
+      </header>
+      <p class="customer-error" id="tracking-error" role="status" hidden></p>
+      <section class="customer-route" id="customer-content" hidden>
+        <div class="customer-stops">
+          <article class="customer-stop"><span class="customer-stop-marker pickup-marker"></span><div><span class="section-kicker">PICKUP</span><strong id="tracking-pickup"></strong></div></article>
+          <span class="customer-route-line" aria-hidden="true"></span>
+          <article class="customer-stop"><span class="customer-stop-marker dropoff-marker"></span><div><span class="section-kicker">DROP-OFF</span><strong id="tracking-dropoff"></strong></div></article>
+        </div>
+        <section class="customer-map-section">
+          <div class="customer-section-heading"><div><span class="section-kicker">SHIPMENT MAP</span><h2>Location overview</h2></div><span id="tracking-location-status">No live location</span></div>
+          <div class="customer-map" id="customer-map" role="img" aria-label="Shipment location overview">
+            <div class="customer-map-tiles" id="customer-map-tiles" aria-hidden="true"></div>
+            <svg class="customer-map-overlay" id="customer-map-overlay" aria-hidden="true"></svg>
+            <p class="customer-map-empty" id="customer-map-empty">Map pins appear when coordinates are available.</p>
+            <div class="map-attribution">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a></div>
+          </div>
+          <p class="customer-map-note">The line between saved locations is a direct-line preview, not a road route or an estimated arrival time. Map tiles are provided by OpenStreetMap.</p>
+        </section>
+        <section class="customer-timeline-section">
+          <div class="customer-section-heading"><div><span class="section-kicker">DELIVERY PROGRESS</span><h2>Shipment updates</h2></div><span id="tracking-updated"></span></div>
+          <ol class="customer-timeline" id="tracking-timeline"></ol>
+        </section>
+      </section>
+      <footer class="customer-footer">This secure link provides tracking information for this shipment only.</footer>
+    </main>
+  </body>
+</html>

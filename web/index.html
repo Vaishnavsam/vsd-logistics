@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-density="comfortable">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0c0d0f">
+    <title>VSD Logistics — Shipment tracking</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <dialog class="form-dialog login-dialog" id="login-dialog">
+      <form id="login-form" method="dialog">
+        <div class="login-brand">VSD<span>LOGISTICS</span></div>
+        <div class="dialog-heading"><div><span class="section-kicker">SECURE WORKSPACE</span><h2>Sign in to operations</h2></div></div>
+        <label for="admin-password">Operations password</label>
+        <input id="admin-password" name="password" type="password" required autocomplete="current-password" placeholder="Enter your configured password">
+        <p class="form-message" id="login-feedback" role="alert"></p>
+        <button class="button button-accent login-submit" type="submit">Sign in</button>
+        <p class="login-footnote">This local workspace requires the password configured by its operator. <a href="/product">Explore the product and FAQs</a>.</p>
+      </form>
+    </dialog>
+    <div class="app-shell">
+      <aside class="rail" aria-label="Main navigation">
+        <a class="rail-brand" href="/" aria-label="VSD Logistics home">V</a>
+        <nav class="rail-nav">
+          <button class="rail-link active" type="button" aria-label="Overview" title="Overview" id="overview-nav" data-page="overview">▦</button>
+          <button class="rail-link" type="button" aria-label="Shipments" title="Shipments" id="shipments-nav" data-page="shipments">◉</button>
+          <button class="rail-link" type="button" aria-label="Drivers" title="Drivers" id="drivers-nav" data-page="drivers">♙</button>
+          <button class="rail-link" type="button" aria-label="Workflows" title="Workflows" id="workflows-nav" data-page="workflows">⟳</button>
+        </nav>
+        <div class="rail-bottom">
+          <a class="rail-link" href="/product" aria-label="Product overview" title="Product overview">ⓘ</a>
+          <span class="system-light" title="Local service connected"></span>
+          <span class="rail-divider"></span>
+          <button class="rail-user" id="logout-button" type="button" aria-label="Sign out" hidden>V</button>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div class="topbar-title">
+            <span class="brand-mini">VSD</span>
+            <span class="topbar-slash">/</span>
+            <strong id="current-page-title">Overview</strong>
+          </div>
+          <label class="global-search">
+            <span aria-hidden="true">⌕</span>
+            <span class="sr-only">Search shipments</span>
+            <input id="global-search" type="search" placeholder="Search shipments, locations, drivers…" autocomplete="off">
+            <kbd>⌘ K</kbd>
+          </label>
+          <div class="topbar-actions">
+            <button class="preference-control theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode" aria-pressed="true">☼ Light theme</button>
+            <button class="preference-control density-toggle" type="button" aria-label="Switch to compact layout" title="Switch to compact layout" aria-pressed="false">▦ Comfortable layout</button>
+            <button class="button button-subtle" id="login-open" type="button">Sign in</button>
+            <span class="connection"><i></i> SERVICE CONNECTED</span>
+            <button class="icon-button" id="refresh-button" type="button" title="Refresh shipments" aria-label="Refresh shipments">↻</button>
+            <button class="button button-accent" id="new-order-open" type="button"><span>＋</span> New shipment</button>
+          </div>
+        </header>
+
+        <main class="overview-page page-view" id="page-overview">
+          <div class="page-heading">
+            <div><span class="section-kicker">OPERATIONS AT A GLANCE</span><h1>Overview</h1><p>Monitor today's shipments, fleet availability, and work in progress.</p></div>
+            <button class="button button-accent" type="button" data-open-order><span>＋</span> New shipment</button>
+          </div>
+          <aside class="preview-banner" id="preview-banner" role="status" hidden>
+            <span class="preview-banner-icon" aria-hidden="true">i</span>
+            <div><strong>Dashboard preview</strong><p>Sign in to load and manage your live shipments, drivers, and workflows.</p></div>
+            <button class="button button-subtle" type="button" data-login>Operator sign in</button>
+          </aside>
+          <div class="metric-grid">
+            <article class="metric-card"><span>ACTIVE SHIPMENTS</span><strong id="metric-active">0</strong><small>Assigned or in transit</small><i>↗</i></article>
+            <article class="metric-card"><span>NEEDS DISPATCH</span><strong id="metric-pending">0</strong><small>Waiting for a driver</small><i>◷</i></article>
+            <article class="metric-card"><span>AVAILABLE DRIVERS</span><strong id="metric-drivers">0</strong><small id="metric-fleet-copy">of 0 drivers ready</small><i>♙</i></article>
+            <article class="metric-card"><span>DELIVERED</span><strong id="metric-delivered">0</strong><small>Completed shipments</small><i>✓</i></article>
+          </div>
+          <div class="overview-columns">
+            <section class="surface-card">
+              <div class="surface-heading"><div><span class="section-kicker">LIVE OPERATIONS</span><h2>Recent shipments</h2></div><button class="text-action" type="button" data-page="shipments">View all →</button></div>
+              <div class="overview-shipment-list" id="overview-shipments"></div>
+            </section>
+            <section class="surface-card">
+              <div class="surface-heading"><div><span class="section-kicker">FLEET STATUS</span><h2>Driver availability</h2></div><button class="text-action" type="button" data-page="drivers">Manage fleet →</button></div>
+              <div class="fleet-summary" id="overview-drivers"></div>
+              <button class="button button-subtle" type="button" data-open-driver>＋ Add a driver</button>
+            </section>
+          </div>
+          <section class="surface-card workflow-callout">
+            <div><span class="section-kicker">REPEATABLE OPERATIONS</span><h2>Make every handoff consistent</h2><p>Build reusable checklists and attach them to shipments.</p></div>
+            <button class="button button-subtle" type="button" data-page="workflows">Explore workflows →</button>
+          </section>
+        </main>
+
+        <main class="tracking-layout page-view" id="page-shipments" hidden>
+          <section class="shipment-rail" aria-label="Shipment tracking list">
+            <div class="list-heading">
+              <div>
+                <div class="section-kicker">OPERATIONS DESK</div>
+                <h1>Tracking list <span class="count-pill" id="shipment-count">0 shipments</span></h1>
+              </div>
+              <button class="icon-button small-icon" id="list-refresh" type="button" title="Refresh list" aria-label="Refresh list">↻</button>
+            </div>
+            <label class="list-search">
+              <span aria-hidden="true">⌕</span>
+              <span class="sr-only">Search order, pickup, drop-off, or driver</span>
+              <input id="list-search" type="search" placeholder="Search order, location, driver…" autocomplete="off">
+              <kbd>/</kbd>
+            </label>
+            <div class="status-tabs" role="group" aria-label="Filter shipments by status">
+              <button class="status-tab selected" data-filter="all" type="button">All <span id="filter-all">0</span></button>
+              <button class="status-tab" data-filter="pending" type="button">Pending</button>
+              <button class="status-tab" data-filter="assigned" type="button">Assigned</button>
+              <button class="status-tab" data-filter="in_transit" type="button">In transit</button>
+              <button class="status-tab" data-filter="delivered" type="button">Delivered</button>
+              <button class="status-tab" data-filter="cancelled" type="button">Cancelled</button>
+            </div>
+            <div class="shipment-list" id="shipment-list"></div>
+            <div class="list-empty" id="list-empty" hidden>
+              <span class="empty-glyph">⌕</span>
+              <strong id="empty-title">No shipments yet</strong>
+              <p id="empty-copy">Create a shipment to get your operations moving.</p>
+              <button class="button button-quiet" id="empty-create" type="button">＋ New shipment</button>
+            </div>
+            <div class="list-footer">
+              <span><i class="footer-dot"></i><span id="service-status">Connecting to service…</span></span>
+              <button class="text-action" id="add-driver-open" type="button">＋ Add driver</button>
+            </div>
+          </section>
+
+          <section class="shipment-workspace">
+            <section class="map-panel" aria-label="Shipment route overview">
+              <div class="map-topline">
+                <div class="map-context">
+                  <span class="map-live-dot"></span>
+                  <span>ROUTE OVERVIEW</span>
+                  <span class="divider">/</span>
+                  <span class="gps-state" id="gps-state">GPS NOT CONNECTED</span>
+                </div>
+                <span class="map-legend" id="map-legend"><i></i> Direct location line · no road routing</span>
+              </div>
+              <div class="world-map" id="tracking-map" role="region" aria-label="Shipment route street map">
+                <div class="map-tiles" aria-hidden="true"></div>
+                <svg class="map-overlay" aria-hidden="true"></svg>
+                <div class="map-empty" id="map-empty">Select a shipment with saved coordinates to plot a direct line.</div>
+              </div>
+              <div class="map-attribution">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></div>
+              <div class="map-route-summary" id="map-route-summary" aria-live="polite"></div>
+              <div class="map-overlay-card" id="map-selection-card">
+                <span class="overlay-kicker">SELECTED SHIPMENT</span>
+                <strong id="map-order-id">No shipment selected</strong>
+                <span class="status-pill status-pending" id="map-status">—</span>
+              </div>
+              <div class="map-zoom-controls" aria-label="Map display controls">
+                <button type="button" id="map-zoom-in" aria-label="Zoom in">＋</button>
+                <button type="button" id="map-zoom-out" aria-label="Zoom out">−</button>
+                <span class="zoom-divider"></span>
+                <button type="button" id="map-reset" aria-label="Fit route and reset map view" title="Fit route and reset map view">⌖</button>
+              </div>
+            </section>
+
+            <section class="detail-panel" aria-label="Selected shipment details">
+              <div class="detail-toolbar">
+                <div class="detail-tabs" role="tablist" aria-label="Shipment details">
+                  <button class="detail-tab active" id="tab-overview" data-tab="overview" role="tab" aria-selected="true" type="button">Overview</button>
+                  <button class="detail-tab" id="tab-activity" data-tab="activity" role="tab" aria-selected="false" type="button">Activity <span id="event-count">0</span></button>
+                  <button class="detail-tab" id="tab-cargo" data-tab="cargo" role="tab" aria-selected="false" type="button">Cargo & capacity</button>
+                  <button class="detail-tab" id="tab-workflow" data-tab="workflow" role="tab" aria-selected="false" type="button">Workflow <span id="workflow-progress">0/0</span></button>
+                </div>
+                <span class="route-disclaimer" id="route-disclaimer">GPS unavailable · ETA unavailable</span>
+              </div>
+
+              <div class="detail-view active" id="view-overview" role="tabpanel" aria-labelledby="tab-overview">
+                <div class="detail-primary">
+                  <div class="shipment-title">
+                    <div class="title-line"><h2 id="detail-order-id">Select a shipment</h2><span class="status-pill status-pending" id="detail-status">—</span></div>
+                    <p id="detail-subtitle">Shipment and route details</p>
+                  </div>
+                  <div class="shipment-route">
+                    <div class="route-codes">
+                      <div class="route-code"><span class="airport-code" id="pickup-code">PICKUP</span><strong id="detail-pickup">Pickup location</strong></div>
+                      <span class="route-track"><i></i></span>
+                      <div class="route-code route-destination"><span class="airport-code" id="dropoff-code">DROP-OFF</span><strong id="detail-dropoff">Drop-off location</strong></div>
+                    </div>
+                    <div class="route-meta"><span id="route-progress-label">Route details only · no GPS</span><span id="route-driver-label">Driver unassigned</span></div>
+                    <div class="progress-track"><span id="progress-fill"></span><i></i><i></i><i></i><i></i></div>
+                  </div>
+                </div>
+                <div class="detail-cards">
+                  <article class="info-card driver-card">
+                    <div class="card-kicker">ASSIGNED DRIVER</div>
+                    <div class="driver-summary">
+                      <span class="driver-avatar large-avatar" id="detail-driver-avatar">—</span>
+                      <span><strong id="detail-driver">Unassigned</strong><small id="detail-vehicle">Vehicle not recorded</small></span>
+                      <span class="driver-state" id="detail-driver-state">—</span>
+                    </div>
+                  </article>
+                  <article class="info-card cargo-card">
+                    <div class="card-kicker">CARGO LOAD</div>
+                    <strong class="cargo-title" id="detail-cargo">General cargo</strong>
+                    <div class="capacity-line"><span>WEIGHT</span><span id="detail-weight">Not recorded</span></div>
+                    <div class="mini-progress"><i id="detail-weight-bar"></i></div>
+                    <div class="capacity-line second-capacity"><span>VOLUME</span><span id="detail-volume">Not recorded</span></div>
+                  </article>
+                  <article class="info-card timing-card">
+                    <div class="card-kicker">DELIVERY STATUS</div>
+                    <strong id="delivery-status-title">Awaiting shipment</strong>
+                    <p id="delivery-status-note">ETA unavailable without live location data.</p>
+                    <span class="status-dot" id="delivery-status-dot"></span>
+                  </article>
+                </div>
+                <div class="detail-actions" id="detail-actions"></div>
+              </div>
+              <div class="detail-view activity-view" id="view-activity" role="tabpanel" aria-labelledby="tab-activity" hidden></div>
+              <div class="detail-view cargo-view" id="view-cargo" role="tabpanel" aria-labelledby="tab-cargo" hidden></div>
+              <div class="detail-view workflow-view" id="view-workflow" role="tabpanel" aria-labelledby="tab-workflow" hidden></div>
+            </section>
+          </section>
+        </main>
+
+        <main class="drivers-page page-view" id="page-drivers" hidden>
+          <div class="page-heading">
+            <div><span class="section-kicker">FLEET OPERATIONS</span><h1>Drivers</h1><p>Manage availability, vehicle capacity, and driver location access.</p></div>
+            <button class="button button-accent" type="button" data-open-driver><span>＋</span> Add driver</button>
+          </div>
+          <div class="metric-grid driver-metrics">
+            <article class="metric-card"><span>TOTAL DRIVERS</span><strong id="driver-total">0</strong><small>In the fleet roster</small></article>
+            <article class="metric-card"><span>AVAILABLE</span><strong id="driver-available">0</strong><small>Ready for dispatch</small></article>
+            <article class="metric-card"><span>ON ASSIGNMENT</span><strong id="driver-assigned">0</strong><small>Currently assigned</small></article>
+            <article class="metric-card"><span>GPS ENABLED</span><strong id="driver-tracking">0</strong><small>Driver token issued</small></article>
+          </div>
+          <section class="surface-card">
+            <div class="surface-heading"><div><span class="section-kicker">FLEET ROSTER</span><h2>All drivers</h2></div><label class="table-search">⌕ <input id="driver-search" type="search" placeholder="Search name or vehicle"></label></div>
+            <div class="driver-table-wrap"><table class="data-table"><thead><tr><th>DRIVER</th><th>VEHICLE</th><th>CAPACITY</th><th>STATUS</th><th>LOCATION ACCESS</th><th></th></tr></thead><tbody id="driver-rows"></tbody></table></div>
+            <div class="table-empty" id="drivers-empty" hidden>No drivers match your search.</div>
+          </section>
+        </main>
+
+        <main class="workflows-page page-view" id="page-workflows" hidden>
+          <div class="page-heading">
+            <div><span class="section-kicker">CUSTOM OPERATIONS</span><h1>Workflows</h1><p>Create reusable checklists for the way your team handles each shipment.</p></div>
+            <button class="button button-accent" id="new-workflow-open" type="button"><span>＋</span> Create workflow</button>
+          </div>
+          <div class="workflow-info"><strong>Flexible checklists. Reliable shipment lifecycle.</strong><span>Workflow tasks add your team's own handoffs. They don't bypass dispatch, transit, or delivery safeguards.</span></div>
+          <div class="workflow-grid" id="workflow-list"></div>
+          <div class="empty-state-card" id="workflow-empty" hidden><span class="empty-glyph">⟳</span><strong>No custom workflows yet</strong><p>Create a repeatable checklist and apply it to new shipments.</p><button class="button button-accent" type="button" id="first-workflow-open">Create your first workflow</button></div>
+        </main>
+      </section>
+    </div>
+
+    <dialog class="form-dialog order-dialog" id="order-dialog">
+      <form id="order-form" method="dialog">
+        <div class="dialog-heading"><div><span class="section-kicker">NEW SHIPMENT</span><h2>Create a shipment</h2></div><button class="dialog-close" type="button" data-close="order-dialog" aria-label="Close">×</button></div>
+        <label for="pickup">Pickup location name or address</label>
+        <input id="pickup" name="pickup" required maxlength="200" placeholder="e.g. Northside warehouse">
+        <label for="dropoff">Drop-off location name or address</label>
+        <input id="dropoff" name="dropoff" required maxlength="200" placeholder="e.g. 42 Market Street">
+        <div class="route-editor-heading"><span>MAP PREVIEW</span><span>Drag pins or enter coordinates</span></div>
+        <div class="route-editor-map" id="order-map" role="region" aria-label="Adjust pickup and drop-off pins on the map">
+          <div class="map-tiles" aria-hidden="true"></div><svg class="map-overlay" aria-hidden="true"></svg>
+          <div class="map-empty" id="order-map-empty">Enter coordinates below to position map pins.</div>
+          <div class="map-attribution">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a></div>
+          <div class="map-zoom-controls editor-zoom" aria-label="Route map controls"><button type="button" data-map-zoom="in" aria-label="Zoom in">＋</button><button type="button" data-map-zoom="out" aria-label="Zoom out">−</button></div>
+        </div>
+        <p class="field-hint">No geocoding or routing service is called. Map tiles load directly from OpenStreetMap; shipment names and coordinates stay within this app.</p>
+        <div class="route-editor-meta" id="order-route-status" aria-live="polite">Coordinates are optional; without them the shipment is saved without map pins.</div>
+        <div class="coordinate-editor">
+          <div><strong>PICKUP COORDINATES</strong><div class="field-row"><span><label for="pickup-latitude">Latitude</label><input id="pickup-latitude" name="pickup_latitude" type="number" min="-90" max="90" step="any" placeholder="Latitude"></span><span><label for="pickup-longitude">Longitude</label><input id="pickup-longitude" name="pickup_longitude" type="number" min="-180" max="180" step="any" placeholder="Longitude"></span></div></div>
+          <div><strong>DROP-OFF COORDINATES</strong><div class="field-row"><span><label for="dropoff-latitude">Latitude</label><input id="dropoff-latitude" name="dropoff_latitude" type="number" min="-90" max="90" step="any" placeholder="Latitude"></span><span><label for="dropoff-longitude">Longitude</label><input id="dropoff-longitude" name="dropoff_longitude" type="number" min="-180" max="180" step="any" placeholder="Longitude"></span></div></div>
+        </div>
+        <label for="order-workflow">Operational checklist</label><select id="order-workflow" name="workflow_id"><option value="">No custom checklist</option></select>
+        <details class="optional-fields"><summary>Cargo details <span>Optional</span></summary>
+          <label for="cargo-description">Cargo description</label><input id="cargo-description" name="cargo_description" maxlength="200" placeholder="e.g. boxed electronics">
+          <div class="field-row"><span><label for="cargo-weight">Weight (kg)</label><input id="cargo-weight" name="cargo_weight_kg" type="number" min="0.01" step="0.01" placeholder="Optional"></span><span><label for="cargo-volume">Volume (m³)</label><input id="cargo-volume" name="cargo_volume_m3" type="number" min="0.01" step="0.01" placeholder="Optional"></span></div>
+        </details>
+        <p class="form-message" id="order-feedback" role="status"></p>
+        <div class="dialog-actions"><button class="button button-subtle" type="button" data-close="order-dialog">Cancel</button><button class="button button-accent" type="submit">Create shipment</button></div>
+      </form>
+    </dialog>
+    <dialog class="form-dialog workflow-dialog" id="workflow-dialog">
+      <form id="workflow-form" method="dialog">
+        <div class="dialog-heading"><div><span class="section-kicker">CUSTOM OPERATIONS</span><h2 id="workflow-dialog-title">Create a workflow</h2></div><button class="dialog-close" type="button" data-close="workflow-dialog" aria-label="Close">×</button></div>
+        <label for="workflow-name">Workflow name</label><input id="workflow-name" name="name" required maxlength="100" placeholder="e.g. Cold-chain delivery">
+        <label for="workflow-description">Description <span class="optional-label">Optional</span></label><input id="workflow-description" name="description" maxlength="500" placeholder="When should this checklist be used?">
+        <label for="workflow-steps">Checklist steps <span class="optional-label">One task per line · up to 20</span></label><textarea id="workflow-steps" name="steps_text" required rows="6" placeholder="Verify cargo and seal&#10;Confirm pickup with dispatcher&#10;Collect recipient signature"></textarea>
+        <p class="field-hint">New shipments using this workflow receive their own checklist copy. Changes here won't alter shipments already created.</p>
+        <p class="form-message" id="workflow-feedback" role="status"></p>
+        <div class="dialog-actions"><button class="button button-subtle" type="button" data-close="workflow-dialog">Cancel</button><button class="button button-accent" id="workflow-submit" type="submit">Save workflow</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="form-dialog" id="driver-dialog">
+      <form id="driver-form" method="dialog">
+        <div class="dialog-heading"><div><span class="section-kicker">FLEET ROSTER</span><h2>Add a driver</h2></div><button class="dialog-close" type="button" data-close="driver-dialog" aria-label="Close">×</button></div>
+        <label for="driver-name">Driver name</label><input id="driver-name" name="name" required maxlength="120" placeholder="e.g. Alex Morgan">
+        <label for="driver-vehicle">Vehicle</label><input id="driver-vehicle" name="vehicle" maxlength="120" placeholder="e.g. Cargo van 12">
+        <div class="field-row"><span><label for="max-weight">Maximum weight (kg)</label><input id="max-weight" name="max_weight_kg" type="number" min="0.01" step="0.01" placeholder="Optional"></span><span><label for="max-volume">Maximum volume (m³)</label><input id="max-volume" name="max_volume_m3" type="number" min="0.01" step="0.01" placeholder="Optional"></span></div>
+        <p class="form-message" id="driver-feedback" role="status"></p>
+        <div class="dialog-actions"><button class="button button-subtle" type="button" data-close="driver-dialog">Cancel</button><button class="button button-accent" type="submit">Add driver</button></div>
+      </form>
+    </dialog>
+    <dialog class="form-dialog token-dialog" id="tracking-token-dialog">
+      <div class="dialog-heading"><div><span class="section-kicker">DRIVER LOCATION ACCESS</span><h2>One-time driver token</h2></div><button class="dialog-close" type="button" data-close="tracking-token-dialog" aria-label="Close">×</button></div>
+      <p class="token-warning">Copy this token now and share it securely with the driver. It cannot be viewed again. Issuing another token immediately revokes this one.</p>
+      <label for="issued-driver-token">Driver token</label>
+      <input id="issued-driver-token" type="password" readonly autocomplete="off">
+      <div class="token-actions"><button class="button button-subtle" id="toggle-token-visibility" type="button">Show</button><button class="button button-subtle" id="copy-driver-token" type="button">Copy token</button><a class="button button-accent" href="/driver" target="_blank" rel="noopener">Open driver page</a></div>
+      <p class="field-hint">Location sharing is accepted only while this driver has an in-transit shipment.</p>
+    </dialog>
+    <dialog class="form-dialog token-dialog" id="customer-tracking-dialog">
+      <div class="dialog-heading"><div><span class="section-kicker">CUSTOMER TRACKING</span><h2>Share shipment link</h2></div><button class="dialog-close" type="button" data-close="customer-tracking-dialog" aria-label="Close">×</button></div>
+      <p class="token-warning">Anyone with this link can view customer-safe status and recent location for this shipment. Copy it now; it cannot be retrieved again. Rotating or revoking it disables this link.</p>
+      <label for="issued-customer-link">Customer tracking link</label>
+      <input id="issued-customer-link" type="text" readonly autocomplete="off">
+      <div class="token-actions"><button class="button button-subtle" id="copy-customer-link" type="button">Copy link</button><a class="button button-accent" id="open-customer-link" target="_blank" rel="noopener noreferrer">Open customer page</a></div>
+      <p class="field-hint">The customer page is read-only and does not show cargo details, driver identity, operator events, or workflow tasks.</p>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

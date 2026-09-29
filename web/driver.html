@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0c0d0f">
+    <title>VSD Logistics — Driver location</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/driver.css">
+    <script src="/driver.js" defer></script>
+  </head>
+  <body class="driver-page">
+    <main class="driver-card">
+      <a class="driver-brand" href="/" aria-label="VSD Logistics home">VSD <span>LOGISTICS</span></a>
+      <span class="section-kicker">DRIVER LOCATION SHARING</span>
+      <h1>Share your trip location</h1>
+      <p class="driver-intro">Your location is sent to operations only while a shipment assigned to you is in transit. Your browser will ask for permission before sharing begins.</p>
+      <label for="driver-token">Driver access token</label>
+      <input id="driver-token" type="password" autocomplete="off" placeholder="Paste the token provided by your operator">
+      <div class="driver-buttons">
+        <button class="button button-accent" id="start-sharing" type="button">Allow location & start</button>
+        <button class="button button-subtle" id="stop-sharing" type="button" disabled>Stop sharing</button>
+      </div>
+      <p class="driver-status" id="driver-status" role="status">Location sharing is off.</p>
+      <div class="driver-fix" id="driver-fix" hidden>
+        <span class="section-kicker">LAST REPORTED DEVICE POSITION</span>
+        <strong id="fix-coordinates">—</strong>
+        <span id="fix-accuracy"></span>
+        <time id="fix-time"></time>
+      </div>
+      <button class="driver-clear" id="clear-token" type="button">Forget this token on this device</button>
+      <p class="driver-note">Keep this page open during the trip. Location is requested from this device every 15 seconds. If the browser stops in the background, updates pause until it resumes.</p>
+    </main>
+  </body>
+</html>
